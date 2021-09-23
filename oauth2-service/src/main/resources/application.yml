@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: oauth2-service
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://${DOCKER_HOST_IP:localhost}/bhhan
+    username: bhhan
+    password: bhhan
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+
+server:
+  port: 9090
+
+oauth2:
+  jwtSigningKey: HelloWorld
+
+user:
+  username: admin
+  email: admin@email.com
+  password: admin_password
+  clientId: client@email.com
+  clientSecret: client_password
+  grantTypes: password
+  scopes: read, write
+
+

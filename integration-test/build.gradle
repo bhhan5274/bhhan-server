@@ -1,0 +1,7 @@
+dependencies {
+    compile project(":career-backend")
+    compile project(":dashboard-backend")
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    testCompile "org.mockito:mockito-core:$mokitoVersion"
+}

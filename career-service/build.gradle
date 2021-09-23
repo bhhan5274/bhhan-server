@@ -1,0 +1,19 @@
+apply plugin: ServicePlugin
+
+project.dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
+dependencies {
+    compile project(":common")
+    compile project(":common-swagger")
+    compile project(":career-api")
+    compile project(":career-backend")
+    compile project(":s3-storage-service")
+    compile project(":local-storage-service")
+
+    compile "org.springframework.cloud:spring-cloud-starter-oauth2"
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+}

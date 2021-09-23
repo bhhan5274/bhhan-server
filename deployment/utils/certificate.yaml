@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bhhan-net-certificate
+spec:
+  dnsNames:
+    - bhhan.net
+    - admin.bhhan.net
+  secretName: bhhan-net-tls
+  issuerRef:
+    name: letsencrypt-cluster-issuer
+    kind: ClusterIssuer

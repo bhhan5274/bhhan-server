@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":career-api")
+    compile "org.apache.tika:tika-core:1.24.1"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+}

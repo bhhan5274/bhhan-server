@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: career-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: career
+    spec:
+      containers:
+        - name: career
+          image: hoya0220/career-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databaseUrl
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databaseUserName
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databasePassword
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: GATEWAY_URL
+              value: https://admin.bhhan.net
+            - name: CLOUD_AWS_CREDENTIALS_ACCESSKEY
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: awsAccessKey
+            - name: CLOUD_AWS_CREDENTIALS_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: awsSecretKey
+            - name: CLOUD_AWS_STACK_AUTO
+              value: "false"
+            - name: CLOUD_AWS_S3_BUCKET
+              value: bhhan-bucket
+            - name: CLOUD_AWS_REGION_STATIC
+              value: ap-northeast-2
+            - name: CLOUD_AWS_CLOUDFRONT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: awsCloudFrontUrl
+            - name: OAUTH2_JWTSIGNINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2JwtSigningKey
+  selector:
+    matchLabels:
+      app: career
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: career-service
+spec:
+  selector:
+    app: career
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

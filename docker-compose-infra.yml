@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:9.5
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=bhhan
+      - POSTGRES_DB=bhhan
+      - POSTGRES_PASSWORD=bhhan

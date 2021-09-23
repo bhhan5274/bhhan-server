@@ -1,0 +1,78 @@
+version: '3'
+services:
+  oauth2:
+    build:
+      context: ./oauth2-service/
+    image: hoya0220/oauth2-service
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: SPRING_DATASOURCE_URL
+      SPRING_DATASOURCE_USERNAME: SPRING_DATASOURCE_USERNAME
+      SPRING_DATASOURCE_PASSWORD: SPRING_DATASOURCE_PASSWORD
+      OAUTH2_JWTSIGNINGKEY: OAUTH2_JWTSIGNINGKEY
+      USER_USERNAME: USER_USERNAME
+      USER_EMAIL: USER_EMAIL
+      USER_PASSWORD: USER_PASSWORD
+      USER_CLIENT_ID: USER_CLIENT_ID
+      CLIENT_SECRET: CLIENT_SECRET
+      GRANT_TYPES: password
+      SCOPES: read, write
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+
+  dashboard:
+    build:
+      context: ./dashboard-service/
+    image: hoya0220/dashboard-service
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: SPRING_DATASOURCE_URL
+      SPRING_DATASOURCE_USERNAME: SPRING_DATASOURCE_USERNAME
+      SPRING_DATASOURCE_PASSWORD: SPRING_DATASOURCE_PASSWORD
+      BHHAN_USERNAME: BHHAN_USERNAME
+      BHHAN_PASSWORD: BHHAN_PASSWORD
+      DASHBOARD_REDIRECTURL: http://localhost:8085
+      GATEWAY_URL: http://gateway:8085
+      OAUTH2_USERNAME: OAUTH2_USERNAME
+      OAUTH2_PASSWORD: OAUTH2_PASSWORD
+      SPRING_PROFILES_ACTIVE: prod
+    restart: always
+
+  career:
+    build:
+      context: ./career-service/
+    image: hoya0220/career-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: SPRING_DATASOURCE_URL
+      SPRING_DATASOURCE_USERNAME: SPRING_DATASOURCE_USERNAME
+      SPRING_DATASOURCE_PASSWORD: SPRING_DATASOURCE_PASSWORD
+      SPRING_PROFILES_ACTIVE: prod
+      GATEWAY_URL: http://localhost:8085
+      CLOUD_AWS_CREDENTIALS_ACCESSKEY: CLOUD_AWS_CREDENTIALS_ACCESSKEY
+      CLOUD_AWS_CREDENTIALS_SECRETKEY: CLOUD_AWS_CREDENTIALS_SECRETKEY
+      CLOUD_AWS_STACK_AUTO: "false"
+      CLOUD_AWS_S3_BUCKET: CLOUD_AWS_S3_BUCKET
+      CLOUD_AWS_REGION_STATIC: CLOUD_AWS_REGION_STATIC
+      CLOUD_AWS_CLOUDFRONT_URL: CLOUD_AWS_CLOUDFRONT_URL
+      OAUTH2_JWTSIGNINGKEY: OAUTH2_JWTSIGNINGKEY
+    restart: always
+
+  gateway:
+    build:
+      context: ./api-gateway
+    image: hoya0220/api-gateway
+    ports:
+      - "8085:8085"
+    environment:
+      CAREER_URL: http://career:8080
+      OAUTH2_URL: http://oauth2:9090
+      DASHBOARD_URL: http://dashboard:9000
+      OAUTH2_JWTSIGNINGKEY: OAUTH2_JWTSIGNINGKEY
+      OAUTH2_USERNAME: OAUTH2_USERNAME
+      OAUTH2_PASSWORD: OAUTH2_PASSWORD
+      OAUTH2_GRANTTYPE: password
+    restart: always

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: hoya0220/dashboard-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databaseUrl
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databaseUserName
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: databasePassword
+            - name: BHHAN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: bhhanUserName
+            - name: BHHAN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: bhhanPassword
+            - name: DASHBOARD_REDIRECT_URL
+              value: https://admin.bhhan.net
+            - name: GATEWAY_URL
+              value: http://gateway-service:8085
+            - name: OAUTH2_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2ClientName
+            - name: OAUTH2_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2ClientPassword
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+  selector:
+    matchLabels:
+      app: dashboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+spec:
+  selector:
+    app: dashboard
+  ports:
+    - port: 9000
+      targetPort: 9000
+  type: ClusterIP

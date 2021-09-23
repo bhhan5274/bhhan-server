@@ -1,0 +1,15 @@
+apply plugin: ServicePlugin
+
+dependencies {
+    compile project(":career-api")
+    compile project(":dashboard-backend")
+
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-security:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5:$thymeleafExtrasVersion"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    testCompile "org.mockito:mockito-core:$mokitoVersion"
+}

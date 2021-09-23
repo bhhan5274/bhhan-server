@@ -1,0 +1,14 @@
+dependencies {
+    compile project(":career-api")
+
+    compile ('org.postgresql:postgresql:9.4-1200-jdbc41') {
+        exclude group: "org.slf4j", module: "slf4j-simple"
+    }
+
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-cache:$springBootVersion"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    testCompile "org.mockito:mockito-core:$mokitoVersion"
+    testCompile "com.h2database:h2:1.4.200"
+}

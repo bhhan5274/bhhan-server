@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: hoya0220/gateway-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CAREER_URL
+              value: http://career-service:8080
+            - name: OAUTH2_URL
+              value: http://oauth2-service:9090
+            - name: DASHBOARD_URL
+              value: http://dashboard-service:9000
+            - name: OAUTH2_JWTSIGNINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2JwtSigningKey
+            - name: OAUTH2_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2UserName
+            - name: OAUTH2_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bhhan-secret
+                  key: oauth2UserPassword
+            - name: OAUTH2_GRANTTYPE
+              value: password
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+  selector:
+    matchLabels:
+      app: gateway
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+spec:
+  selector:
+    app: gateway
+  ports:
+    - port: 8085
+      targetPort: 8085
+  type: ClusterIP
