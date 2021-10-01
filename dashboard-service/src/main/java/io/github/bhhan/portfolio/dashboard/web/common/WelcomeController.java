@@ -1,10 +1,13 @@
 package io.github.bhhan.portfolio.dashboard.web.common;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Objects;
 
 @Controller
 public class WelcomeController {
@@ -14,10 +17,15 @@ public class WelcomeController {
     }
 
     @GetMapping("/")
-    public String index(@RequestParam(value="error", defaultValue = "false") boolean error, Model model){
+    public String index(@RequestParam(value="error", defaultValue = "false") boolean error,
+                        Authentication authentication,
+                        Model model){
         if(error){
             model.addAttribute("security_exception", "Login Failed!!!");
         }
+
+        model.addAttribute("admin", Objects.nonNull(authentication) ? "admin" : "anonymous");
+
         return "project/projectDashboard";
     }
 
